@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">FuelCardsHolder</string>
+    <string name="cards">Карты</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="delete_button">delete button</string>
+    <string name="adDeleteMessage">Удалить?</string>
+    <string name="adYes">Да</string>
+    <string name="adNo">Нет</string>
+    <string name="card_name">Имя карты</string>
+    <string name="card_number">Номер карты</string>
+    <string name="adAdd">Добавить</string>
+    <string name="adCancel">Отмена</string>
+    <string name="date">Дата</string>
+    <string name="change">Изменение</string>
+    <string name="balance">Баланс</string>
+    <string name="adOutcome">Расход</string>
+    <string name="adIncome">Приход</string>
+    <string name="adAddCard">Добавление карты</string>
+    <string name="adAddNote">Добавление записи</string>
+    <string name="lit">литров</string>
+</resources>
