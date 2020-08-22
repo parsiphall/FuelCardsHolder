@@ -67,7 +67,7 @@ class DetailsFragment : MvpAppCompatFragment() {
         getData()
         details_add_fab.setOnClickListener {
             note = Note()
-            var total = card.balance
+            val total = card.balance
             val btn1 = getString(R.string.adOutcome)
             val btn2 = getString(R.string.adIncome)
             val dialogView = layoutInflater.inflate(R.layout.dialog_add_note, null)
@@ -83,14 +83,14 @@ class DetailsFragment : MvpAppCompatFragment() {
                 .setPositiveButton(btn1) { _, _ ->
                     note.cardId = card.id
                     note.date = date.text.toString()
-                    note.difference = ("%.2f".format(difference.text.toString().toFloat())).toFloat()
+                    note.difference = (difference.text.toString().toFloat() / 100) * 100
                     card.balance = total - note.difference
                     saveData()
                 }
                 .setNegativeButton(btn2) { _, _ ->
                     note.cardId = card.id
                     note.date = date.text.toString()
-                    note.difference = ("%.2f".format(difference.text.toString().toFloat())).toFloat()
+                    note.difference = (difference.text.toString().toFloat() / 100) * 100
                     card.balance = total + note.difference
                     saveData()
                 }

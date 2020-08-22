@@ -26,7 +26,7 @@ class DetailsViewAdapter(private var items: List<Note>, private val context: Con
 
     override fun onBindViewHolder(holder: DetailsViewHolder, position: Int) {
         holder.detailsDate.text = items[position].date
-        holder.detailsDifference.text = items[position].difference.toString()
+        holder.detailsDifference.text = ("%.2f".format(items[position].difference))
         holder.detailsDelete.setOnClickListener {
             val btn1 = context.getString(R.string.adYes)
             val btn2 = context.getString(R.string.adNo)
