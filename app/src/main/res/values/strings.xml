@@ -18,5 +18,15 @@
     <string name="adIncome">Приход</string>
     <string name="adAddCard">Добавление карты</string>
     <string name="adAddNote">Добавление записи</string>
-    <string name="lit">литров</string>
+    <string name="lit">л</string>
+
+    <string-array name="fuelType">
+        <item>ДТ</item>
+        <item>АИ-76</item>
+        <item>АИ-80</item>
+        <item>АИ-92</item>
+        <item>АИ-95</item>
+        <item>АИ-98</item>
+        <item>АИ-100</item>
+    </string-array>
 </resources>

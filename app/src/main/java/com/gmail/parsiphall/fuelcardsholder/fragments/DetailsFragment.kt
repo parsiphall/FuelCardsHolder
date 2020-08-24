@@ -4,9 +4,11 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,8 +18,6 @@ import com.gmail.parsiphall.fuelcardsholder.data.Card
 import com.gmail.parsiphall.fuelcardsholder.data.Note
 import com.gmail.parsiphall.fuelcardsholder.interfaces.MainView
 import com.gmail.parsiphall.fuelcardsholder.recycler.DetailsViewAdapter
-import com.gmail.parsiphall.fuelcardsholder.recycler.OnItemClickListener
-import com.gmail.parsiphall.fuelcardsholder.recycler.addOnItemClickListener
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.fragment_details.view.*
 import kotlinx.coroutines.GlobalScope
@@ -84,21 +84,41 @@ class DetailsFragment : MvpAppCompatFragment() {
                     note.cardId = card.id
                     note.date = date.text.toString()
                     note.difference = (difference.text.toString().toFloat() / 100) * 100
-                    card.balance = total - note.difference
+                    card.balance = ((total - note.difference) / 100) * 100
                     saveData()
                 }
                 .setNegativeButton(btn2) { _, _ ->
                     note.cardId = card.id
                     note.date = date.text.toString()
                     note.difference = (difference.text.toString().toFloat() / 100) * 100
-                    card.balance = total + note.difference
+                    card.balance = ((total + note.difference) / 100) * 100
                     saveData()
                 }
                 .show()
         }
+        details_fuelType.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                (parent!!.getChildAt(0) as TextView).textSize = 20f
+                card.fuelType = details_fuelType.selectedItemPosition
+                GlobalScope.launch {
+                    DB.getDao().updateCard(card)
+                }
+
+            }
+        })
     }
 
     private fun saveData() {
+        card.fuelType = details_fuelType.selectedItemPosition
         val dataSave = GlobalScope.async {
             DB.getDao().addNote(note)
             DB.getDao().updateCard(card)
@@ -120,6 +140,7 @@ class DetailsFragment : MvpAppCompatFragment() {
             adapter.dataChanged(items)
             details_card_name.text = card.name
             details_card_number.text = card.number
+            details_fuelType.setSelection(card.fuelType)
         }
     }
 

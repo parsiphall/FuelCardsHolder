@@ -11,7 +11,6 @@ import com.gmail.parsiphall.fuelcardsholder.data.Card
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import java.util.Collections.reverse
 
 class CardViewAdapter(private var items: List<Card>, private val context: Context) :
     RecyclerView.Adapter<CardViewHolder>() {
@@ -28,6 +27,7 @@ class CardViewAdapter(private var items: List<Card>, private val context: Contex
         holder.cardName.text = items[position].name
         holder.cardNumber.text = items[position].number
         holder.cardBalance.text = items[position].balance.toString()
+        holder.cardFuelType.text = context.resources.getStringArray(R.array.fuelType)[items[position].fuelType]
         holder.delete.setOnClickListener {
             val btn1 = context.getString(R.string.adYes)
             val btn2 = context.getString(R.string.adNo)
