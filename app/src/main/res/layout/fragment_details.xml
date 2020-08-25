@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -43,8 +44,8 @@
                 android:id="@+id/details_balance"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -95,21 +96,15 @@
                 style="@style/totalItemTextView"
                 android:layout_weight="5"
                 android:text="@string/change" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_weight="0"
-                android:contentDescription="@string/delete_button"
-                android:src="@drawable/ic_twotone_delete_24"
-                android:visibility="invisible" />
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.tsuryo.swipeablerv.SwipeableRecyclerView
             android:id="@+id/details_recycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:rightBgColor="@color/colorRed"
+            app:rightImage="@drawable/ic_white_delete_24"
+            app:rightText="@string/adDeleteMessage" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

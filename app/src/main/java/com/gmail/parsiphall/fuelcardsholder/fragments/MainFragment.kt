@@ -71,7 +71,7 @@ class MainFragment : MvpAppCompatFragment() {
             override fun onSwipedLeft(position: Int) {
                 adD
                     .setTitle(resources.getString(R.string.adDeleteMessage))
-                    .setMessage(items[position].name)
+                    .setMessage("Карта - ${items[position].name}\nНомер - ${items[position].number}")
                     .setCancelable(false)
                     .setPositiveButton(resources.getString(R.string.adYes)) { _, _ ->
                         val delete = GlobalScope.async { DB.getDao().deleteCard(items[position]) }
@@ -99,7 +99,11 @@ class MainFragment : MvpAppCompatFragment() {
                 .setTitle(getString(R.string.adAddCard))
                 .setCancelable(false)
                 .setPositiveButton(btn1) { dialog, _ ->
-                    if (name.text.isNotEmpty() && number.text.isNotEmpty()) {
+                    if (name.text.isEmpty() || number.text.isEmpty()) {
+                        dialog.cancel()
+                        Snackbar.make(view, getString(R.string.wrongData), Snackbar.LENGTH_LONG)
+                            .show()
+                    } else {
                         card.name = name.text.toString()
                         card.number = number.text.toString()
                         val addCard = GlobalScope.async {
@@ -109,9 +113,6 @@ class MainFragment : MvpAppCompatFragment() {
                             addCard.await()
                             getData()
                         }
-                    } else {
-                        dialog.cancel()
-                        Snackbar.make(view, getString(R.string.wrongData), Snackbar.LENGTH_LONG).show()
                     }
                 }
                 .setNegativeButton(btn2) { dialog, _ ->

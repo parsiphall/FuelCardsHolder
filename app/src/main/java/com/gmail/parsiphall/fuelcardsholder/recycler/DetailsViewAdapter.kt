@@ -27,34 +27,10 @@ class DetailsViewAdapter(private var items: List<Note>, private val context: Con
     override fun onBindViewHolder(holder: DetailsViewHolder, position: Int) {
         holder.detailsDate.text = items[position].date
         holder.detailsDifference.text = ("%.2f".format(items[position].difference))
-        holder.detailsDelete.setOnClickListener {
-            val btn1 = context.getString(R.string.adYes)
-            val btn2 = context.getString(R.string.adNo)
-            ad
-                .setTitle(items[position].date)
-                .setMessage(context.getString(R.string.adDeleteMessage))
-                .setPositiveButton(btn1) { _, _ ->
-                    delete(position)
-                }
-                .setNegativeButton(btn2) { dialog, _ ->
-                    dialog.cancel()
-                }
-                .show()
-        }
     }
 
     fun dataChanged(newItems: List<Note>) {
         items = newItems
         notifyDataSetChanged()
-    }
-
-    private fun delete(position: Int) = GlobalScope.launch {
-        val cardID = items[position].cardId
-        DB.getDao().deleteNote(items[position])
-        items = DB.getDao().getNotesForCard(cardID)
-        reverse(items)
-        MainScope().launch {
-            notifyDataSetChanged()
-        }
     }
 }

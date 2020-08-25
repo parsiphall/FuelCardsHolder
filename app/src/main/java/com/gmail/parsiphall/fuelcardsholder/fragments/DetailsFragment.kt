@@ -20,6 +20,7 @@ import com.gmail.parsiphall.fuelcardsholder.data.Note
 import com.gmail.parsiphall.fuelcardsholder.interfaces.MainView
 import com.gmail.parsiphall.fuelcardsholder.recycler.DetailsViewAdapter
 import com.google.android.material.snackbar.Snackbar
+import com.tsuryo.swipeablerv.SwipeLeftRightCallback
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.fragment_details.view.*
 import kotlinx.coroutines.GlobalScope
@@ -37,6 +38,7 @@ class DetailsFragment : MvpAppCompatFragment() {
     private var items: List<Note> = ArrayList()
     private lateinit var adapter: DetailsViewAdapter
     private lateinit var ad: AlertDialog.Builder
+    private lateinit var adD: AlertDialog.Builder
     private lateinit var note: Note
     private lateinit var card: Card
     private var cardBalance = 0f
@@ -46,6 +48,7 @@ class DetailsFragment : MvpAppCompatFragment() {
         super.onAttach(context)
         callbackActivity = context as MainView
         ad = AlertDialog.Builder(context)
+        adD = AlertDialog.Builder(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +71,30 @@ class DetailsFragment : MvpAppCompatFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getData()
+        details_recycler.setListener(object :SwipeLeftRightCallback.Listener{
+            override fun onSwipedRight(position: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onSwipedLeft(position: Int) {
+                adD
+                    .setTitle(resources.getString(R.string.adDeleteMessage))
+                    .setMessage("Дата - ${items[position].date}\nСумма - ${items[position].difference}")
+                    .setCancelable(false)
+                    .setPositiveButton(resources.getString(R.string.adYes)) { _, _ ->
+                        val delete = GlobalScope.async { DB.getDao().deleteNote(items[position]) }
+                        MainScope().launch {
+                            delete.await()
+                            getData()
+                        }
+                    }
+                    .setNegativeButton(resources.getString(R.string.adNo)) { dialog, _ ->
+                        dialog.cancel()
+                        getData()
+                    }
+                    .show()
+            }
+        })
         details_add_fab.setOnClickListener {
             note = Note()
             val btn1 = getString(R.string.adOutcome)
