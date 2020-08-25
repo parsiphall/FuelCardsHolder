@@ -28,33 +28,10 @@ class CardViewAdapter(private var items: List<Card>, private val context: Contex
         holder.cardNumber.text = items[position].number
         holder.cardBalance.text = items[position].balance.toString()
         holder.cardFuelType.text = context.resources.getStringArray(R.array.fuelType)[items[position].fuelType]
-        holder.delete.setOnClickListener {
-            val btn1 = context.getString(R.string.adYes)
-            val btn2 = context.getString(R.string.adNo)
-            ad
-                .setTitle(items[position].name)
-                .setMessage(context.getString(R.string.adDeleteMessage))
-                .setPositiveButton(btn1) { _, _ ->
-                    delete(position)
-                }
-                .setNegativeButton(btn2) { dialog, _ ->
-                    dialog.cancel()
-                }
-                .show()
-        }
     }
 
     fun dataChanged(newItems: List<Card>) {
         items = newItems
         notifyDataSetChanged()
     }
-
-    private fun delete(position: Int) = GlobalScope.launch {
-        DB.getDao().deleteCard(items[position])
-        items = DB.getDao().getAllCards()
-        MainScope().launch {
-            notifyDataSetChanged()
-        }
-    }
-
 }

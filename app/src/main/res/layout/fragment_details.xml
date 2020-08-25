@@ -28,6 +28,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
+                    android:textColor="#000000"
                     android:textSize="20sp" />
 
                 <TextView
@@ -35,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -57,7 +58,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:textAlignment="center"
-                        android:textSize="25sp" />
+                        android:textColor="#222222"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -65,7 +67,8 @@
                         android:layout_weight="1"
                         android:text="@string/lit"
                         android:textAlignment="center"
-                        android:textSize="25sp" />
+                        android:textColor="#222222"
+                        android:textSize="20sp" />
                 </LinearLayout>
 
                 <Spinner

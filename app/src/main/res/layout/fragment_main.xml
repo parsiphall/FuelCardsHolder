@@ -3,12 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.MainFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.tsuryo.swipeablerv.SwipeableRecyclerView
         android:id="@+id/main_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:rightBgColor="@color/colorRed"
+        app:rightImage="@drawable/ic_white_delete_48"
+        app:rightText="Delete"
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/main_add_fab"

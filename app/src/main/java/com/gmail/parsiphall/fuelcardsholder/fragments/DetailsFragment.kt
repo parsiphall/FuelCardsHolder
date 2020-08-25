@@ -3,6 +3,7 @@ package com.gmail.parsiphall.fuelcardsholder.fragments
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import com.gmail.parsiphall.fuelcardsholder.data.Card
 import com.gmail.parsiphall.fuelcardsholder.data.Note
 import com.gmail.parsiphall.fuelcardsholder.interfaces.MainView
 import com.gmail.parsiphall.fuelcardsholder.recycler.DetailsViewAdapter
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.fragment_details.view.*
 import kotlinx.coroutines.GlobalScope
@@ -37,6 +39,7 @@ class DetailsFragment : MvpAppCompatFragment() {
     private lateinit var ad: AlertDialog.Builder
     private lateinit var note: Note
     private lateinit var card: Card
+    private var cardBalance = 0f
 
 
     override fun onAttach(context: Context) {
@@ -67,7 +70,6 @@ class DetailsFragment : MvpAppCompatFragment() {
         getData()
         details_add_fab.setOnClickListener {
             note = Note()
-            val total = card.balance
             val btn1 = getString(R.string.adOutcome)
             val btn2 = getString(R.string.adIncome)
             val dialogView = layoutInflater.inflate(R.layout.dialog_add_note, null)
@@ -80,19 +82,31 @@ class DetailsFragment : MvpAppCompatFragment() {
                 .setView(dialogView)
                 .setTitle(getString(R.string.adAddNote))
                 .setCancelable(false)
-                .setPositiveButton(btn1) { _, _ ->
-                    note.cardId = card.id
-                    note.date = date.text.toString()
-                    note.difference = (difference.text.toString().toFloat() / 100) * 100
-                    card.balance = ((total - note.difference) / 100) * 100
-                    saveData()
+                .setPositiveButton(btn1) { dialog, _ ->
+                    if (date.text == resources.getString(R.string.date) || difference.text.isEmpty()) {
+                        dialog.cancel()
+                        Snackbar.make(view, getString(R.string.wrongData), Snackbar.LENGTH_LONG)
+                            .show()
+                    } else {
+                        note.cardId = card.id
+                        note.date = date.text.toString()
+                        note.difference = -(difference.text.toString().toFloat() / 100) * 100
+                        card.balance = ((cardBalance + note.difference) / 100) * 100
+                        saveData()
+                    }
                 }
-                .setNegativeButton(btn2) { _, _ ->
-                    note.cardId = card.id
-                    note.date = date.text.toString()
-                    note.difference = (difference.text.toString().toFloat() / 100) * 100
-                    card.balance = ((total + note.difference) / 100) * 100
-                    saveData()
+                .setNegativeButton(btn2) { dialog, _ ->
+                    if (date.text == resources.getString(R.string.date) || difference.text.isEmpty()) {
+                        dialog.cancel()
+                        Snackbar.make(view, getString(R.string.wrongData), Snackbar.LENGTH_LONG)
+                            .show()
+                    } else {
+                        note.cardId = card.id
+                        note.date = date.text.toString()
+                        note.difference = (difference.text.toString().toFloat() / 100) * 100
+                        card.balance = ((cardBalance + note.difference) / 100) * 100
+                        saveData()
+                    }
                 }
                 .show()
         }
@@ -108,6 +122,7 @@ class DetailsFragment : MvpAppCompatFragment() {
                 id: Long
             ) {
                 (parent!!.getChildAt(0) as TextView).textSize = 20f
+                (parent!!.getChildAt(0) as TextView).setTextColor(Color.GRAY)
                 card.fuelType = details_fuelType.selectedItemPosition
                 GlobalScope.launch {
                     DB.getDao().updateCard(card)
@@ -136,8 +151,12 @@ class DetailsFragment : MvpAppCompatFragment() {
         }
         MainScope().launch {
             data.await()
-            details_balance_textView.text = card.balance.toString()
+            cardBalance = 0f
+            for (i in items) {
+                cardBalance += i.difference
+            }
             adapter.dataChanged(items)
+            details_balance_textView.text = cardBalance.toString()
             details_card_name.text = card.name
             details_card_number.text = card.number
             details_fuelType.setSelection(card.fuelType)

@@ -15,6 +15,8 @@ import com.gmail.parsiphall.fuelcardsholder.interfaces.MainView
 import com.gmail.parsiphall.fuelcardsholder.recycler.CardViewAdapter
 import com.gmail.parsiphall.fuelcardsholder.recycler.OnItemClickListener
 import com.gmail.parsiphall.fuelcardsholder.recycler.addOnItemClickListener
+import com.google.android.material.snackbar.Snackbar
+import com.tsuryo.swipeablerv.SwipeLeftRightCallback
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
 import kotlinx.coroutines.GlobalScope
@@ -30,12 +32,14 @@ class MainFragment : MvpAppCompatFragment() {
     private var items: List<Card> = ArrayList()
     private lateinit var adapter: CardViewAdapter
     private lateinit var ad: AlertDialog.Builder
+    private lateinit var adD: AlertDialog.Builder
     private lateinit var card: Card
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         callbackActivity = context as MainView
         ad = AlertDialog.Builder(context)
+        adD = AlertDialog.Builder(context)
     }
 
     override fun onCreateView(
@@ -59,6 +63,30 @@ class MainFragment : MvpAppCompatFragment() {
                 callbackActivity.fragmentPlace(DetailsFragment(), bundle)
             }
         })
+        main_recycler.setListener(object : SwipeLeftRightCallback.Listener {
+            override fun onSwipedRight(position: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onSwipedLeft(position: Int) {
+                adD
+                    .setTitle(resources.getString(R.string.adDeleteMessage))
+                    .setMessage(items[position].name)
+                    .setCancelable(false)
+                    .setPositiveButton(resources.getString(R.string.adYes)) { _, _ ->
+                        val delete = GlobalScope.async { DB.getDao().deleteCard(items[position]) }
+                        MainScope().launch {
+                            delete.await()
+                            getData()
+                        }
+                    }
+                    .setNegativeButton(resources.getString(R.string.adNo)) { dialog, _ ->
+                        dialog.cancel()
+                        getData()
+                    }
+                    .show()
+            }
+        })
         main_add_fab.setOnClickListener {
             card = Card()
             val btn1 = getString(R.string.adAdd)
@@ -70,15 +98,20 @@ class MainFragment : MvpAppCompatFragment() {
                 .setView(dialogView)
                 .setTitle(getString(R.string.adAddCard))
                 .setCancelable(false)
-                .setPositiveButton(btn1) { _, _ ->
-                    card.name = name.text.toString()
-                    card.number = number.text.toString()
-                    val addCard = GlobalScope.async {
-                        DB.getDao().addCard(card)
-                    }
-                    MainScope().launch {
-                        addCard.await()
-                        getData()
+                .setPositiveButton(btn1) { dialog, _ ->
+                    if (name.text.isNotEmpty() && number.text.isNotEmpty()) {
+                        card.name = name.text.toString()
+                        card.number = number.text.toString()
+                        val addCard = GlobalScope.async {
+                            DB.getDao().addCard(card)
+                        }
+                        MainScope().launch {
+                            addCard.await()
+                            getData()
+                        }
+                    } else {
+                        dialog.cancel()
+                        Snackbar.make(view, getString(R.string.wrongData), Snackbar.LENGTH_LONG).show()
                     }
                 }
                 .setNegativeButton(btn2) { dialog, _ ->
@@ -97,4 +130,5 @@ class MainFragment : MvpAppCompatFragment() {
             adapter.dataChanged(items)
         }
     }
+
 }

@@ -19,6 +19,7 @@
     <string name="adAddCard">Добавление карты</string>
     <string name="adAddNote">Добавление записи</string>
     <string name="lit">л</string>
+    <string name="wrongData">Не верные данные</string>
 
     <string-array name="fuelType">
         <item>ДТ</item>

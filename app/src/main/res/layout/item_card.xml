@@ -27,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
+                android:textColor="#000000"
                 android:textSize="20sp" />
 
             <TextView
@@ -34,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textSize="25sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -55,7 +56,8 @@
                     android:layout_weight="5"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:textSize="25sp" />
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -63,7 +65,8 @@
                     android:layout_weight="1"
                     android:text="@string/lit"
                     android:textAlignment="center"
-                    android:textSize="25sp" />
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <TextView
@@ -71,18 +74,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textSize="25sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/item_card_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:contentDescription="@string/delete_button"
-            android:src="@drawable/ic_twotone_delete_48" />
-
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
