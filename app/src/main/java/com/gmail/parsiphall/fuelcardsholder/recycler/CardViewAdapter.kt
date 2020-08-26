@@ -26,7 +26,7 @@ class CardViewAdapter(private var items: List<Card>, private val context: Contex
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         holder.cardName.text = items[position].name
         holder.cardNumber.text = items[position].number
-        holder.cardBalance.text = items[position].balance.toString()
+        holder.cardBalance.text = ("%.2f".format(items[position].balance))
         holder.cardFuelType.text = context.resources.getStringArray(R.array.fuelType)[items[position].fuelType]
     }
 

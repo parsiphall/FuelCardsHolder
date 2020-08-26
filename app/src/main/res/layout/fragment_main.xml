@@ -11,9 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:rightBgColor="@color/colorRed"
-        app:rightImage="@drawable/ic_white_delete_48"
-        app:rightText="@string/adDeleteMessage"
-        />
+        app:rightImage="@drawable/ic_white_delete_48"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/main_add_fab"

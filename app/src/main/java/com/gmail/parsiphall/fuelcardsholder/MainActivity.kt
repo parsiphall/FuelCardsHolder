@@ -20,7 +20,7 @@ class MainActivity : MvpAppCompatActivity(), MainView {
             .beginTransaction()
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
             .replace(R.id.container, fragment)
-            .addToBackStack(null)
+//            .addToBackStack(null)
             .commit()
     }
 }

@@ -79,7 +79,7 @@ class DetailsFragment : MvpAppCompatFragment() {
             override fun onSwipedLeft(position: Int) {
                 adD
                     .setTitle(resources.getString(R.string.adDeleteMessage))
-                    .setMessage("Дата - ${items[position].date}\nСумма - ${items[position].difference}")
+                    .setMessage("Дата - ${items[position].date}\nСумма  ${items[position].difference}")
                     .setCancelable(false)
                     .setPositiveButton(resources.getString(R.string.adYes)) { _, _ ->
                         val delete = GlobalScope.async { DB.getDao().deleteNote(items[position]) }
@@ -117,8 +117,8 @@ class DetailsFragment : MvpAppCompatFragment() {
                     } else {
                         note.cardId = card.id
                         note.date = date.text.toString()
-                        note.difference = -(difference.text.toString().toFloat() / 100) * 100
-                        card.balance = ((cardBalance + note.difference) / 100) * 100
+                        note.difference = -difference.text.toString().toFloat()
+                        card.balance = cardBalance + note.difference
                         saveData()
                     }
                 }
@@ -130,12 +130,15 @@ class DetailsFragment : MvpAppCompatFragment() {
                     } else {
                         note.cardId = card.id
                         note.date = date.text.toString()
-                        note.difference = (difference.text.toString().toFloat() / 100) * 100
-                        card.balance = ((cardBalance + note.difference) / 100) * 100
+                        note.difference = difference.text.toString().toFloat()
+                        card.balance = cardBalance + note.difference
                         saveData()
                     }
                 }
                 .show()
+        }
+        details_back_fab.setOnClickListener {
+            callbackActivity.fragmentPlace(MainFragment())
         }
         details_fuelType.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -183,7 +186,7 @@ class DetailsFragment : MvpAppCompatFragment() {
                 cardBalance += i.difference
             }
             adapter.dataChanged(items)
-            details_balance_textView.text = cardBalance.toString()
+            details_balance_textView.text = ("%.2f".format(cardBalance))
             details_card_name.text = card.name
             details_card_number.text = card.number
             details_fuelType.setSelection(card.fuelType)
