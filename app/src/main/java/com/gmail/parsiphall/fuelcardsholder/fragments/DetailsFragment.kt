@@ -5,7 +5,6 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,7 +70,7 @@ class DetailsFragment : MvpAppCompatFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getData()
-        details_recycler.setListener(object :SwipeLeftRightCallback.Listener{
+        details_recycler.setListener(object : SwipeLeftRightCallback.Listener {
             override fun onSwipedRight(position: Int) {
                 TODO("Not yet implemented")
             }
@@ -108,7 +107,6 @@ class DetailsFragment : MvpAppCompatFragment() {
             ad
                 .setView(dialogView)
                 .setTitle(getString(R.string.adAddNote))
-                .setCancelable(false)
                 .setPositiveButton(btn1) { dialog, _ ->
                     if (date.text == resources.getString(R.string.date) || difference.text.isEmpty()) {
                         dialog.cancel()
@@ -118,8 +116,7 @@ class DetailsFragment : MvpAppCompatFragment() {
                         note.cardId = card.id
                         note.date = date.text.toString()
                         note.difference = -difference.text.toString().toFloat()
-                        card.balance = cardBalance + note.difference
-                        saveData()
+                        saveNotes()
                     }
                 }
                 .setNegativeButton(btn2) { dialog, _ ->
@@ -131,8 +128,7 @@ class DetailsFragment : MvpAppCompatFragment() {
                         note.cardId = card.id
                         note.date = date.text.toString()
                         note.difference = difference.text.toString().toFloat()
-                        card.balance = cardBalance + note.difference
-                        saveData()
+                        saveNotes()
                     }
                 }
                 .show()
@@ -162,15 +158,21 @@ class DetailsFragment : MvpAppCompatFragment() {
         })
     }
 
-    private fun saveData() {
-        card.fuelType = details_fuelType.selectedItemPosition
+    private fun saveNotes() {
         val dataSave = GlobalScope.async {
             DB.getDao().addNote(note)
-            DB.getDao().updateCard(card)
         }
         MainScope().launch {
             dataSave.await()
             getData()
+        }
+    }
+
+    private fun updateCard() {
+        card.balance = cardBalance
+        card.fuelType = details_fuelType.selectedItemPosition
+        GlobalScope.launch {
+            DB.getDao().updateCard(card)
         }
     }
 
@@ -181,15 +183,24 @@ class DetailsFragment : MvpAppCompatFragment() {
         }
         MainScope().launch {
             data.await()
-            cardBalance = 0f
-            for (i in items) {
-                cardBalance += i.difference
-            }
-            adapter.dataChanged(items)
-            details_balance_textView.text = ("%.2f".format(cardBalance))
-            details_card_name.text = card.name
-            details_card_number.text = card.number
-            details_fuelType.setSelection(card.fuelType)
+            setData()
+        }
+    }
+
+    private fun setData() {
+        calculateCardBalance()
+        details_balance_textView.text = ("%.2f".format(cardBalance))
+        details_card_name.text = card.name
+        details_card_number.text = card.number
+        details_fuelType.setSelection(card.fuelType)
+        adapter.dataChanged(items)
+        updateCard()
+    }
+
+    private fun calculateCardBalance() {
+        cardBalance = 0f
+        for (i in items) {
+            cardBalance += i.difference
         }
     }
 
