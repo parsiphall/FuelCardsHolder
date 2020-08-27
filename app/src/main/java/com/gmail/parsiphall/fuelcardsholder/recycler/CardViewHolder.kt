@@ -9,4 +9,5 @@ class CardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val cardNumber = view.item_card_number!!
     val cardBalance = view.item_card_balance!!
     val cardFuelType = view.item_card_fuelType!!
+    val cardRoot = view.item_card_root!!
 }

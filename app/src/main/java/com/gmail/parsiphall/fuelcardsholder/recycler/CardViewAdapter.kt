@@ -2,6 +2,7 @@ package com.gmail.parsiphall.fuelcardsholder.recycler
 
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +28,11 @@ class CardViewAdapter(private var items: List<Card>, private val context: Contex
         holder.cardName.text = items[position].name
         holder.cardNumber.text = items[position].number
         holder.cardBalance.text = ("%.2f".format(items[position].balance))
-        holder.cardFuelType.text = context.resources.getStringArray(R.array.fuelType)[items[position].fuelType]
+        holder.cardFuelType.text =
+            context.resources.getStringArray(R.array.fuelType)[items[position].fuelType]
+        if (items[position].balance < 50) {
+            holder.cardRoot.setCardBackgroundColor(Color.YELLOW)
+        }
     }
 
     fun dataChanged(newItems: List<Card>) {
