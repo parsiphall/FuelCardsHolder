@@ -96,6 +96,10 @@
                 style="@style/totalItemTextView"
                 android:layout_weight="5"
                 android:text="@string/change" />
+
+            <TextView
+                style="@style/totalItemTextView"
+                android:layout_weight="1"/>
         </LinearLayout>
 
         <com.tsuryo.swipeablerv.SwipeableRecyclerView
@@ -106,6 +110,17 @@
             app:rightBgColor="@color/colorRed"
             app:rightImage="@drawable/ic_white_delete_24"/>
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/details_share_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="70dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_baseline_share_24" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/details_add_fab"

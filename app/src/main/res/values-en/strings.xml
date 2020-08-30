@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FuelCardsHolder</string>
+    <string name="cards">Cards</string>
+    <string name="adDeleteMessage">Delete?</string>
+    <string name="adYes">Yes</string>
+    <string name="adNo">No</string>
+    <string name="card_name">Card name</string>
+    <string name="card_number">Card number</string>
+    <string name="adAdd">Add</string>
+    <string name="adCancel">Cancel</string>
+    <string name="date">Date</string>
+    <string name="change">Change</string>
+    <string name="balance">Balance</string>
+    <string name="adAddCard">Add card</string>
+    <string name="adAddNote">Add note</string>
+    <string name="lit">lit</string>
+    <string name="wrongData">Wrong data</string>
+    <string name="share">Share</string>
+    <string name="cardNumber">Card №</string>
+    <string name="adOutcome">Expence</string>
+    <string name="adIncome">Income</string>
+    <string name="delete_button">delete button</string>
+    <string name="lastChanges">Last changes:</string>
+</resources>

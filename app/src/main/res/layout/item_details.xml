@@ -23,6 +23,11 @@
             android:id="@+id/item_details_change"
             style="@style/totalItemTextView"
             android:layout_weight="5" />
+
+        <TextView
+            style="@style/totalItemTextView"
+            android:layout_weight="1"
+            android:text="@string/lit"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

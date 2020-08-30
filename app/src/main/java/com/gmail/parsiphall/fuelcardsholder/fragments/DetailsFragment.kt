@@ -3,6 +3,7 @@ package com.gmail.parsiphall.fuelcardsholder.fragments
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -138,6 +139,9 @@ class DetailsFragment : MvpAppCompatFragment() {
         details_back_fab.setOnClickListener {
             callbackActivity.fragmentPlace(MainFragment())
         }
+        details_share_fab.setOnClickListener {
+            shareData()
+        }
         details_fuelType.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -158,6 +162,32 @@ class DetailsFragment : MvpAppCompatFragment() {
 
             }
         })
+    }
+
+    private fun shareData() = GlobalScope.launch {
+        var textToSend = "${resources.getString(R.string.cardNumber)} ${card.number}\n" +
+                "${card.name}\n" +
+                "${card.balance} ${resources.getString(R.string.lit)}"
+        if (adapter.itemCount != 0) {
+            textToSend += "\n" +
+                    getString(R.string.lastChanges)
+        }
+        if (adapter.itemCount >= 3) {
+            for (i in 0..2) {
+                textToSend += "\n" +
+                        "${items[i].date} - ${items[i].difference}"
+            }
+        } else if (adapter.itemCount != 0) {
+            for (i in 0 until adapter.itemCount) {
+                textToSend += "\n" +
+                        "${items[i].date} - ${items[i].difference}"
+            }
+        }
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        sendIntent.putExtra(Intent.EXTRA_TEXT, textToSend)
+        sendIntent.type = "text/plain"
+        startActivity(Intent.createChooser(sendIntent, getString(R.string.share)))
     }
 
     private fun saveNotes() {
