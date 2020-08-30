@@ -2,6 +2,7 @@ package com.gmail.parsiphall.fuelcardsholder.fragments
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
+import java.util.*
 import kotlin.collections.ArrayList
 
 class MainFragment : MvpAppCompatFragment() {
@@ -121,6 +123,21 @@ class MainFragment : MvpAppCompatFragment() {
                 }
                 .show()
         }
+        main_share_fab.setOnClickListener {
+            shareData()
+        }
+    }
+
+    private fun shareData() = GlobalScope.launch {
+        val c = Calendar.getInstance()
+        var textToSend =
+            "${c.get(Calendar.DAY_OF_MONTH)}-${c.get(Calendar.MONTH) + 1}-${c.get(Calendar.YEAR)}\n\n"
+        items.forEach { textToSend += "${it.number}(${it.name}) - ${it.balance}\n" }
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        sendIntent.putExtra(Intent.EXTRA_TEXT, textToSend)
+        sendIntent.type = "text/plain"
+        startActivity(Intent.createChooser(sendIntent, resources.getString(R.string.share)))
     }
 
     private fun getData() {

@@ -10,6 +10,7 @@
         android:id="@+id/main_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="65dp"
         app:rightBgColor="@color/colorRed"
         app:rightImage="@drawable/ic_white_delete_48"/>
 
@@ -23,5 +24,16 @@
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
         android:src="@drawable/ic_baseline_add_24"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/main_share_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="8dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_baseline_share_24" />
 
 </FrameLayout>

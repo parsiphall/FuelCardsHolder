@@ -42,7 +42,7 @@ class DetailsFragment : MvpAppCompatFragment() {
     private lateinit var note: Note
     private lateinit var card: Card
     private var cardBalance = 0f
-    private val sdf = SimpleDateFormat("dd/MM/yyyy")
+    private val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
 
 
     override fun onAttach(context: Context) {
@@ -174,13 +174,23 @@ class DetailsFragment : MvpAppCompatFragment() {
         }
         if (adapter.itemCount >= 3) {
             for (i in 0..2) {
+                val diff = if (items[i].difference > 0) {
+                    "+${items[i].difference}"
+                } else {
+                    "${items[i].difference}"
+                }
                 textToSend += "\n" +
-                        "${items[i].date} - ${items[i].difference}"
+                        "${items[i].date} - $diff"
             }
         } else if (adapter.itemCount != 0) {
             for (i in 0 until adapter.itemCount) {
+                val diff = if (items[i].difference > 0) {
+                    "+${items[i].difference}"
+                } else {
+                    "${items[i].difference}"
+                }
                 textToSend += "\n" +
-                        "${items[i].date} - ${items[i].difference}"
+                        "${items[i].date} - $diff"
             }
         }
         val sendIntent = Intent()
