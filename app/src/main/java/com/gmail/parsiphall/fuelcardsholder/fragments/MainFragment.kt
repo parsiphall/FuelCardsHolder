@@ -132,7 +132,10 @@ class MainFragment : MvpAppCompatFragment() {
         val c = Calendar.getInstance()
         var textToSend =
             "${c.get(Calendar.DAY_OF_MONTH)}-${c.get(Calendar.MONTH) + 1}-${c.get(Calendar.YEAR)}\n\n"
-        items.forEach { textToSend += "${it.number}(${it.name}) - ${it.balance}\n" }
+        items.forEach {
+            val balance = ("%.2f".format(it.balance))
+            textToSend += "${it.number}(${it.name})   $balance\n"
+        }
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_SEND
         sendIntent.putExtra(Intent.EXTRA_TEXT, textToSend)

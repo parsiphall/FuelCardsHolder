@@ -175,22 +175,22 @@ class DetailsFragment : MvpAppCompatFragment() {
         if (adapter.itemCount >= 3) {
             for (i in 0..2) {
                 val diff = if (items[i].difference > 0) {
-                    "+${items[i].difference}"
+                    "+${("%.2f".format(items[i].difference))}"
                 } else {
-                    "${items[i].difference}"
+                    ("%.2f".format(items[i].difference))
                 }
                 textToSend += "\n" +
-                        "${items[i].date} - $diff"
+                        "${items[i].date}   $diff"
             }
         } else if (adapter.itemCount != 0) {
             for (i in 0 until adapter.itemCount) {
                 val diff = if (items[i].difference > 0) {
-                    "+${items[i].difference}"
+                    "+${("%.2f".format(items[i].difference))}"
                 } else {
-                    "${items[i].difference}"
+                    ("%.2f".format(items[i].difference))
                 }
                 textToSend += "\n" +
-                        "${items[i].date} - $diff"
+                        "${items[i].date}   $diff"
             }
         }
         val sendIntent = Intent()
