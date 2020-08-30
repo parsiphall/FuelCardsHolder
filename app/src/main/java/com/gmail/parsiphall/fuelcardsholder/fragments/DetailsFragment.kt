@@ -27,8 +27,8 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
+import java.text.SimpleDateFormat
 import java.util.*
-import java.util.Collections.reverse
 import kotlin.collections.ArrayList
 
 class DetailsFragment : MvpAppCompatFragment() {
@@ -41,6 +41,7 @@ class DetailsFragment : MvpAppCompatFragment() {
     private lateinit var note: Note
     private lateinit var card: Card
     private var cardBalance = 0f
+    private val sdf = SimpleDateFormat("dd/MM/yyyy")
 
 
     override fun onAttach(context: Context) {
@@ -84,6 +85,7 @@ class DetailsFragment : MvpAppCompatFragment() {
                         val delete = GlobalScope.async { DB.getDao().deleteNote(items[position]) }
                         MainScope().launch {
                             delete.await()
+                            adapter.notifyItemRemoved(position)
                             getData()
                         }
                     }
@@ -148,7 +150,7 @@ class DetailsFragment : MvpAppCompatFragment() {
                 id: Long
             ) {
                 (parent!!.getChildAt(0) as TextView).textSize = 20f
-                (parent!!.getChildAt(0) as TextView).setTextColor(Color.GRAY)
+                (parent.getChildAt(0) as TextView).setTextColor(Color.GRAY)
                 card.fuelType = details_fuelType.selectedItemPosition
                 GlobalScope.launch {
                     DB.getDao().updateCard(card)
@@ -178,8 +180,7 @@ class DetailsFragment : MvpAppCompatFragment() {
 
     private fun getData() {
         val data = GlobalScope.async {
-            items = DB.getDao().getNotesForCard(card.id)
-            reverse(items)
+            items = (DB.getDao().getNotesForCard(card.id)).sortedByDescending { sdf.parse(it.date) }
         }
         MainScope().launch {
             data.await()
@@ -199,9 +200,7 @@ class DetailsFragment : MvpAppCompatFragment() {
 
     private fun calculateCardBalance() {
         cardBalance = 0f
-        for (i in items) {
-            cardBalance += i.difference
-        }
+        items.forEach { cardBalance += it.difference }
     }
 
     private fun dateListener(v: View): DatePickerDialog.OnDateSetListener =

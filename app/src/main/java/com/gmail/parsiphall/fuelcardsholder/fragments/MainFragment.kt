@@ -77,6 +77,7 @@ class MainFragment : MvpAppCompatFragment() {
                         val delete = GlobalScope.async { DB.getDao().deleteCard(items[position]) }
                         MainScope().launch {
                             delete.await()
+                            adapter.notifyItemRemoved(position)
                             getData()
                         }
                     }
@@ -124,7 +125,7 @@ class MainFragment : MvpAppCompatFragment() {
 
     private fun getData() {
         val data = GlobalScope.async {
-            items = DB.getDao().getAllCards()
+            items = (DB.getDao().getAllCards()).sortedBy { it.name }
         }
         MainScope().launch {
             data.await()
