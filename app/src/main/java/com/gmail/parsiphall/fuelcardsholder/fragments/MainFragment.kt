@@ -1,13 +1,18 @@
 package com.gmail.parsiphall.fuelcardsholder.fragments
 
+import android.app.ActionBar
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gmail.parsiphall.fuelcardsholder.DB
 import com.gmail.parsiphall.fuelcardsholder.R
@@ -32,9 +37,11 @@ class MainFragment : MvpAppCompatFragment() {
 
     private lateinit var callbackActivity: MainView
     private var items: List<Card> = ArrayList()
+    private var itemsToShare: MutableList<Card> = ArrayList()
     private lateinit var adapter: CardViewAdapter
     private lateinit var ad: AlertDialog.Builder
     private lateinit var adD: AlertDialog.Builder
+    private lateinit var adS: AlertDialog.Builder
     private lateinit var card: Card
 
     override fun onAttach(context: Context) {
@@ -42,6 +49,7 @@ class MainFragment : MvpAppCompatFragment() {
         callbackActivity = context as MainView
         ad = AlertDialog.Builder(context)
         adD = AlertDialog.Builder(context)
+        adS = AlertDialog.Builder(context)
     }
 
     override fun onCreateView(
@@ -124,18 +132,51 @@ class MainFragment : MvpAppCompatFragment() {
                 .show()
         }
         main_share_fab.setOnClickListener {
-            shareData()
+            shareDataWithOptions()
         }
+    }
+
+    private fun shareDataWithOptions() {
+        val btn1 = resources.getString(R.string.share)
+        val btn2 = resources.getString(R.string.adCancel)
+        val dialogView: View = layoutInflater.inflate(R.layout.dialog_share_data, null)
+        val root = dialogView.findViewById<LinearLayout>(R.id.dialog_share_data_root)
+        items.forEach {
+            val cb = CheckBox(activity)
+            cb.text = it.name
+            cb.id = it.id
+            cb.isChecked = false
+            root.addView(cb)
+        }
+        adS
+            .setView(dialogView)
+            .setTitle(resources.getString(R.string.share))
+            .setCancelable(false)
+            .setPositiveButton(btn1) { _, _ ->
+                items.forEach {
+                    val cb = root.findViewById<CheckBox>(it.id)
+                    if (cb.isChecked) {
+                        itemsToShare.add(it)
+                    }
+                }
+                root.removeAllViews()
+                shareData()
+            }
+            .setNegativeButton(btn2) { dialog, _ ->
+                dialog.cancel()
+            }
+            .show()
     }
 
     private fun shareData() = GlobalScope.launch {
         val c = Calendar.getInstance()
         var textToSend =
             "${c.get(Calendar.DAY_OF_MONTH)}-${c.get(Calendar.MONTH) + 1}-${c.get(Calendar.YEAR)}\n\n"
-        items.forEach {
+        itemsToShare.forEach {
             val balance = ("%.2f".format(it.balance))
             textToSend += "${it.number}(${it.name})   $balance\n"
         }
+        itemsToShare.clear()
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_SEND
         sendIntent.putExtra(Intent.EXTRA_TEXT, textToSend)
