@@ -6,12 +6,8 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.gmail.parsiphall.fuelcardsholder.DB
 import com.gmail.parsiphall.fuelcardsholder.R
 import com.gmail.parsiphall.fuelcardsholder.data.Card
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 class CardViewAdapter(private var items: List<Card>, private val context: Context) :
     RecyclerView.Adapter<CardViewHolder>() {
