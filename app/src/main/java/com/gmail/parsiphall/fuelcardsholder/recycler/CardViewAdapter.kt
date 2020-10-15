@@ -27,6 +27,8 @@ class CardViewAdapter(private var items: List<Card>, private val context: Contex
         holder.cardFuelType.text =
             context.resources.getStringArray(R.array.fuelType)[items[position].fuelType]
         if (items[position].balance < 50) {
+            holder.cardRoot.setCardBackgroundColor(Color.RED)
+        } else if (items[position].balance < 90){
             holder.cardRoot.setCardBackgroundColor(Color.YELLOW)
         }
     }
