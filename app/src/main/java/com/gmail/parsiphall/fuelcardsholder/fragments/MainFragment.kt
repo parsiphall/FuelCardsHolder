@@ -132,7 +132,7 @@ class MainFragment : MvpAppCompatFragment() {
                 .show()
         }
         main_add_fab.setOnLongClickListener {
-            val data = GlobalScope.async { ImportDB.import(context!!, DB_NAME) }
+            val data = GlobalScope.async { ImportDB.launch(context!!, DB_NAME) }
             MainScope().launch {
                 data.await()
                 callbackActivity.fragmentPlace(MainFragment())
@@ -143,7 +143,7 @@ class MainFragment : MvpAppCompatFragment() {
             shareDataWithOptions()
         }
         main_share_fab.setOnLongClickListener {
-            GlobalScope.launch { ExportDB.export(context!!, DB_NAME) }
+            GlobalScope.launch { ExportDB.launch(context!!, DB_NAME) }
             return@setOnLongClickListener true
         }
     }

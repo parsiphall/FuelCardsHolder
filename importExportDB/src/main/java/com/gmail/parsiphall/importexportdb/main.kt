@@ -13,7 +13,7 @@ import java.nio.channels.FileChannel
 
 class ImportDB {
     companion object {
-        fun import(c: Context, name: String) {
+        fun launch(c: Context, name: String) {
             val sd =
                 File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
@@ -61,7 +61,7 @@ class ImportDB {
 
 class ExportDB {
     companion object {
-        fun export(c: Context, name: String) {
+        fun launch(c: Context, name: String) {
             val sd =
                 File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
