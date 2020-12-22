@@ -111,27 +111,39 @@ class DetailsFragment : MvpAppCompatFragment() {
                 .setView(dialogView)
                 .setTitle(getString(R.string.adAddNote))
                 .setPositiveButton(btn1) { dialog, _ ->
-                    if (date.text == resources.getString(R.string.date) || difference.text.isEmpty()) {
-                        dialog.cancel()
-                        Snackbar.make(view, getString(R.string.wrongData), Snackbar.LENGTH_LONG)
-                            .show()
-                    } else {
-                        note.cardId = card.id
-                        note.date = date.text.toString()
-                        note.difference = -difference.text.toString().toFloat()
-                        saveNotes()
+                    when {
+                        difference.text.isEmpty() -> {
+                            dialog.cancel()
+                            Snackbar.make(view, getString(R.string.wrongData), Snackbar.LENGTH_LONG)
+                                .show()
+                        }
+                        date.text == resources.getString(R.string.date) -> {
+                            datePickerDialog(date)
+                        }
+                        else -> {
+                            note.cardId = card.id
+                            note.date = date.text.toString()
+                            note.difference = -difference.text.toString().toFloat()
+                            saveNotes()
+                        }
                     }
                 }
                 .setNegativeButton(btn2) { dialog, _ ->
-                    if (date.text == resources.getString(R.string.date) || difference.text.isEmpty()) {
-                        dialog.cancel()
-                        Snackbar.make(view, getString(R.string.wrongData), Snackbar.LENGTH_LONG)
-                            .show()
-                    } else {
-                        note.cardId = card.id
-                        note.date = date.text.toString()
-                        note.difference = difference.text.toString().toFloat()
-                        saveNotes()
+                    when {
+                        difference.text.isEmpty() -> {
+                            dialog.cancel()
+                            Snackbar.make(view, getString(R.string.wrongData), Snackbar.LENGTH_LONG)
+                                .show()
+                        }
+                        date.text == resources.getString(R.string.date) -> {
+                            datePickerDialog(date)
+                        }
+                        else -> {
+                            note.cardId = card.id
+                            note.date = date.text.toString()
+                            note.difference = difference.text.toString().toFloat()
+                            saveNotes()
+                        }
                     }
                 }
                 .show()

@@ -1,2 +1,3 @@
+include ':importExportDB'
 include ':app'
 rootProject.name = "FuelCardsHolder"

@@ -12,12 +12,15 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gmail.parsiphall.fuelcardsholder.DB
+import com.gmail.parsiphall.fuelcardsholder.DB_NAME
 import com.gmail.parsiphall.fuelcardsholder.R
 import com.gmail.parsiphall.fuelcardsholder.data.Card
 import com.gmail.parsiphall.fuelcardsholder.interfaces.MainView
 import com.gmail.parsiphall.fuelcardsholder.recycler.CardViewAdapter
 import com.gmail.parsiphall.fuelcardsholder.recycler.OnItemClickListener
 import com.gmail.parsiphall.fuelcardsholder.recycler.addOnItemClickListener
+import com.gmail.parsiphall.importexportdb.ExportDB
+import com.gmail.parsiphall.importexportdb.ImportDB
 import com.google.android.material.snackbar.Snackbar
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -128,8 +131,20 @@ class MainFragment : MvpAppCompatFragment() {
                 }
                 .show()
         }
+        main_add_fab.setOnLongClickListener {
+            val data = GlobalScope.async { ImportDB.import(context!!, DB_NAME) }
+            MainScope().launch {
+                data.await()
+                callbackActivity.fragmentPlace(MainFragment())
+            }
+            return@setOnLongClickListener true
+        }
         main_share_fab.setOnClickListener {
             shareDataWithOptions()
+        }
+        main_share_fab.setOnLongClickListener {
+            GlobalScope.launch { ExportDB.export(context!!, DB_NAME) }
+            return@setOnLongClickListener true
         }
     }
 
