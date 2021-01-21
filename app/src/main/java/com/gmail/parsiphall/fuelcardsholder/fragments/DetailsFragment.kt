@@ -148,9 +148,6 @@ class DetailsFragment : MvpAppCompatFragment() {
                 }
                 .show()
         }
-        details_back_fab.setOnClickListener {
-            callbackActivity.fragmentPlace(MainFragment())
-        }
         details_share_fab.setOnClickListener {
             shareData()
         }

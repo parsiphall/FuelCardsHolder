@@ -12,6 +12,7 @@ import moxy.MvpAppCompatActivity
 import moxy.MvpAppCompatFragment
 
 class MainActivity : MvpAppCompatActivity(), MainView {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,7 +35,15 @@ class MainActivity : MvpAppCompatActivity(), MainView {
                 )
             }
         }
-        fragmentPlace(MainFragment())
+        fragmentPlaceMain(MainFragment())
+    }
+
+    override fun fragmentPlaceMain(fragment: MvpAppCompatFragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            .replace(R.id.container, fragment)
+            .commit()
     }
 
     override fun fragmentPlace(fragment: MvpAppCompatFragment, bundle: Bundle?) {
@@ -43,6 +52,7 @@ class MainActivity : MvpAppCompatActivity(), MainView {
             .beginTransaction()
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
             .replace(R.id.container, fragment)
+            .addToBackStack(null)
             .commit()
     }
 }

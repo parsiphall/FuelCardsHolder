@@ -21,6 +21,9 @@
     <string name="share">Отправить</string>
     <string name="cardNumber">Карта №</string>
     <string name="lastChanges">Последние изменения:</string>
+    <string name="exportDB">Экспорт БД</string>
+    <string name="importDB">Импорт БД</string>
+    <string name="settings">Настройки</string>
 
     <string-array name="fuelType">
         <item>ДТ</item>

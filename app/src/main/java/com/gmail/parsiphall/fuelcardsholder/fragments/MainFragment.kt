@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -42,6 +43,7 @@ class MainFragment : MvpAppCompatFragment() {
     private lateinit var ad: AlertDialog.Builder
     private lateinit var adD: AlertDialog.Builder
     private lateinit var adS: AlertDialog.Builder
+    private lateinit var adSet: AlertDialog.Builder
     private lateinit var card: Card
 
     override fun onAttach(context: Context) {
@@ -50,6 +52,7 @@ class MainFragment : MvpAppCompatFragment() {
         ad = AlertDialog.Builder(context)
         adD = AlertDialog.Builder(context)
         adS = AlertDialog.Builder(context)
+        adSet = AlertDialog.Builder(context)
     }
 
     override fun onCreateView(
@@ -131,20 +134,35 @@ class MainFragment : MvpAppCompatFragment() {
                 }
                 .show()
         }
-        main_add_fab.setOnLongClickListener {
-            val data = GlobalScope.async { ImportDB.launch(context!!, DB_NAME) }
-            MainScope().launch {
-                data.await()
-                callbackActivity.fragmentPlace(MainFragment())
+        main_settings_fab.setOnClickListener {
+            val btn1 = getString(R.string.adCancel)
+            val dialogView: View = layoutInflater.inflate(R.layout.dialog_settings, null)
+            val exportButton = dialogView.findViewById<Button>(R.id.dialog_settings_export)
+            val importButton = dialogView.findViewById<Button>(R.id.dialog_settings_import)
+            adSet
+                .setView(dialogView)
+                .setTitle(getString(R.string.settings))
+                .setCancelable(false)
+                .setPositiveButton(btn1) { dialog, _ ->
+                    dialog.cancel()
+                }
+            val dialog = adSet.create()
+            exportButton.setOnClickListener {
+                GlobalScope.launch { ExportDB.launch(context!!, DB_NAME) }
+                dialog.cancel()
             }
-            return@setOnLongClickListener true
+            importButton.setOnClickListener {
+                val data = GlobalScope.async { ImportDB.launch(context!!, DB_NAME) }
+                MainScope().launch {
+                    data.await()
+                    callbackActivity.fragmentPlaceMain(MainFragment())
+                }
+                dialog.cancel()
+            }
+            dialog.show()
         }
         main_share_fab.setOnClickListener {
             shareDataWithOptions()
-        }
-        main_share_fab.setOnLongClickListener {
-            GlobalScope.launch { ExportDB.launch(context!!, DB_NAME) }
-            return@setOnLongClickListener true
         }
     }
 

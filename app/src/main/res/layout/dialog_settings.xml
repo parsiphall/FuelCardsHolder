@@ -4,24 +4,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/dialog_card_name"
+    <Button
+        android:id="@+id/dialog_settings_export"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
-        android:hint="@string/card_name"
-        android:inputType="text" />
+        style="?android:attr/buttonBarButtonStyle"
+        android:text="@string/exportDB" />
 
-    <EditText
-        android:id="@+id/dialog_card_number"
+    <Button
+        android:id="@+id/dialog_settings_import"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
-        android:hint="@string/card_number"
-        android:inputType="numberDecimal" />
+        style="?android:attr/buttonBarButtonStyle"
+        android:text="@string/importDB" />
 
 </LinearLayout>

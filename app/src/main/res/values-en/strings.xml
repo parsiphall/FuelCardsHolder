@@ -22,4 +22,7 @@
     <string name="adIncome">Income</string>
     <string name="delete_button">delete button</string>
     <string name="lastChanges">Last changes:</string>
+    <string name="exportDB">Export DB</string>
+    <string name="importDB">Import DB</string>
+    <string name="settings">Settings</string>
 </resources>
