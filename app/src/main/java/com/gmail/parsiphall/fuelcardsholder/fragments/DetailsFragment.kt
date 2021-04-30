@@ -243,7 +243,8 @@ class DetailsFragment : MvpAppCompatFragment() {
     private fun shareData() = GlobalScope.launch {
         var textToSend = "${resources.getString(R.string.cardNumber)} ${card.number}\n" +
                 "${card.name}\n" +
-                "${("%.2f".format(card.balance))} ${resources.getString(R.string.lit)}"
+                "${("%.2f".format(card.balance))} ${resources.getString(R.string.lit)}\n" +
+                "${resources.getString(R.string.expired)} ${card.expired}"
         if (adapter.itemCount != 0) {
             textToSend += "\n" +
                     getString(R.string.lastChanges)
