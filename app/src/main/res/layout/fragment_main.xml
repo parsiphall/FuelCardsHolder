@@ -14,7 +14,7 @@
         app:rightBgColor="@color/colorRed"
         app:rightImage="@drawable/ic_white_delete_48"
         app:leftBgColor="@color/colorGreen"
-        app:leftImage="@drawable/ic_baseline_border_color_24"
+        app:leftImage="@drawable/ic_baseline_border_color_48"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
