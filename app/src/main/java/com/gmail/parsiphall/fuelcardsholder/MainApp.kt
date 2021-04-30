@@ -29,9 +29,18 @@ class MainApp : Application() {
             }
         }
 
+        val mig2to3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE Card ADD COLUMN expired TEXT DEFAULT '' NOT NULL")
+            }
+        }
+
         mDataBase = Room
             .databaseBuilder(applicationContext, DataBase::class.java, DB_NAME)
-            .addMigrations(mig1to2)
+            .addMigrations(
+                mig1to2,
+                mig2to3
+            )
             .build()
     }
 }

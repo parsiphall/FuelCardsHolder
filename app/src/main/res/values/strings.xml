@@ -24,6 +24,9 @@
     <string name="exportDB">Экспорт БД</string>
     <string name="importDB">Импорт БД</string>
     <string name="settings">Настройки</string>
+    <string name="correction">Редактирование</string>
+    <string name="record">Записать</string>
+    <string name="expired">Действует до:</string>
 
     <string-array name="fuelType">
         <item>ДТ</item>

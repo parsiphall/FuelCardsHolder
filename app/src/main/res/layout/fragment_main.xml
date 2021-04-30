@@ -12,7 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="65dp"
         app:rightBgColor="@color/colorRed"
-        app:rightImage="@drawable/ic_white_delete_48"/>
+        app:rightImage="@drawable/ic_white_delete_48"
+        app:leftBgColor="@color/colorGreen"
+        app:leftImage="@drawable/ic_baseline_border_color_24"
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/main_add_fab"

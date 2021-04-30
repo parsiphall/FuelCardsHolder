@@ -44,6 +44,7 @@ class MainFragment : MvpAppCompatFragment() {
     private lateinit var adD: AlertDialog.Builder
     private lateinit var adS: AlertDialog.Builder
     private lateinit var adSet: AlertDialog.Builder
+    private lateinit var adCor: AlertDialog.Builder
     private lateinit var card: Card
 
     override fun onAttach(context: Context) {
@@ -53,6 +54,7 @@ class MainFragment : MvpAppCompatFragment() {
         adD = AlertDialog.Builder(context)
         adS = AlertDialog.Builder(context)
         adSet = AlertDialog.Builder(context)
+        adCor = AlertDialog.Builder(context)
     }
 
     override fun onCreateView(
@@ -78,7 +80,41 @@ class MainFragment : MvpAppCompatFragment() {
         })
         main_recycler.setListener(object : SwipeLeftRightCallback.Listener {
             override fun onSwipedRight(position: Int) {
-                TODO("Not yet implemented")
+                card = items[position]
+                val btn1 = getString(R.string.record)
+                val btn2 = getString(R.string.adCancel)
+                val dialogView: View = layoutInflater.inflate(R.layout.dialog_add_card, null)
+                val name = dialogView.findViewById<EditText>(R.id.dialog_card_name)
+                val number = dialogView.findViewById<EditText>(R.id.dialog_card_number)
+                name.setText(card.name)
+                number.setText(card.number)
+                adCor
+                    .setView(dialogView)
+                    .setTitle(getString(R.string.correction))
+                    .setCancelable(false)
+                    .setPositiveButton(btn1) { dialog, _ ->
+                        if (name.text.isEmpty() || number.text.isEmpty()) {
+                            dialog.cancel()
+                            Snackbar.make(view, getString(R.string.wrongData), Snackbar.LENGTH_LONG)
+                                .show()
+                        } else {
+                            card.name = name.text.toString()
+                            card.number = number.text.toString()
+                            val updateCard = GlobalScope.async {
+                                DB.getDao().updateCard(card)
+                            }
+                            MainScope().launch {
+                                updateCard.await()
+                                getData()
+                            }
+                        }
+                    }
+                    .setNegativeButton(btn2) { dialog, _ ->
+                        getData()
+                        dialog.cancel()
+                    }
+                    .show()
+
             }
 
             override fun onSwipedLeft(position: Int) {
@@ -204,7 +240,7 @@ class MainFragment : MvpAppCompatFragment() {
             "${c.get(Calendar.DAY_OF_MONTH)}-${c.get(Calendar.MONTH) + 1}-${c.get(Calendar.YEAR)}\n\n"
         itemsToShare.forEach {
             val balance = ("%.2f".format(it.balance))
-            textToSend += "${it.number}(${it.name})   $balance\n"
+            textToSend += "${it.number}(${it.name} - ${it.fuelType}) - ${it.expired}   $balance\n"
         }
         itemsToShare.clear()
         val sendIntent = Intent()

@@ -31,6 +31,7 @@ import moxy.MvpAppCompatFragment
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.abs
 
 class DetailsFragment : MvpAppCompatFragment() {
 
@@ -39,6 +40,7 @@ class DetailsFragment : MvpAppCompatFragment() {
     private lateinit var adapter: DetailsViewAdapter
     private lateinit var ad: AlertDialog.Builder
     private lateinit var adD: AlertDialog.Builder
+    private lateinit var adCor: AlertDialog.Builder
     private lateinit var note: Note
     private lateinit var card: Card
     private var cardBalance = 0f
@@ -50,6 +52,7 @@ class DetailsFragment : MvpAppCompatFragment() {
         callbackActivity = context as MainView
         ad = AlertDialog.Builder(context)
         adD = AlertDialog.Builder(context)
+        adCor = AlertDialog.Builder(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,9 +75,71 @@ class DetailsFragment : MvpAppCompatFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getData()
+        adCor.setOnCancelListener {
+            getData()
+        }
         details_recycler.setListener(object : SwipeLeftRightCallback.Listener {
             override fun onSwipedRight(position: Int) {
-                TODO("Not yet implemented")
+                note = items[position]
+                val btn1 = getString(R.string.adOutcome)
+                val btn2 = getString(R.string.adIncome)
+                val dialogView = layoutInflater.inflate(R.layout.dialog_add_note, null)
+                val date = dialogView.findViewById<TextView>(R.id.dialog_add_note_date)
+                date.text = note.date
+                val difference = dialogView.findViewById<EditText>(R.id.dialog_add_note_difference)
+                difference.setText(abs(note.difference).toString())
+                val expired = dialogView.findViewById<TextView>(R.id.dialog_add_note_expired)
+                expired.text = card.expired
+                date.setOnClickListener {
+                    datePickerDialog(it)
+                }
+                expired.setOnClickListener {
+                    datePickerDialog(it)
+                }
+                adCor
+                    .setView(dialogView)
+                    .setTitle(getString(R.string.adAddNote))
+                    .setPositiveButton(btn1) { dialog, _ ->
+                        when {
+                            difference.text.isEmpty() -> {
+                                dialog.cancel()
+                                Snackbar.make(
+                                    view,
+                                    getString(R.string.wrongData),
+                                    Snackbar.LENGTH_LONG
+                                )
+                                    .show()
+                            }
+                            else -> {
+                                note.cardId = card.id
+                                note.date = date.text.toString()
+                                note.difference = -difference.text.toString().toFloat()
+                                card.expired = expired.text.toString()
+                                saveNotes()
+                            }
+                        }
+                    }
+                    .setNegativeButton(btn2) { dialog, _ ->
+                        when {
+                            difference.text.isEmpty() -> {
+                                dialog.cancel()
+                                Snackbar.make(
+                                    view,
+                                    getString(R.string.wrongData),
+                                    Snackbar.LENGTH_LONG
+                                )
+                                    .show()
+                            }
+                            else -> {
+                                note.cardId = card.id
+                                note.date = date.text.toString()
+                                note.difference = difference.text.toString().toFloat()
+                                card.expired = expired.text.toString()
+                                saveNotes()
+                            }
+                        }
+                    }
+                    .show()
             }
 
             override fun onSwipedLeft(position: Int) {
@@ -103,8 +168,14 @@ class DetailsFragment : MvpAppCompatFragment() {
             val btn2 = getString(R.string.adIncome)
             val dialogView = layoutInflater.inflate(R.layout.dialog_add_note, null)
             val date = dialogView.findViewById<TextView>(R.id.dialog_add_note_date)
+            date.text = dateComparator()
             val difference = dialogView.findViewById<EditText>(R.id.dialog_add_note_difference)
+            val expired = dialogView.findViewById<TextView>(R.id.dialog_add_note_expired)
+            expired.text = card.expired
             date.setOnClickListener {
+                datePickerDialog(it)
+            }
+            expired.setOnClickListener {
                 datePickerDialog(it)
             }
             ad
@@ -117,13 +188,11 @@ class DetailsFragment : MvpAppCompatFragment() {
                             Snackbar.make(view, getString(R.string.wrongData), Snackbar.LENGTH_LONG)
                                 .show()
                         }
-                        date.text == resources.getString(R.string.date) -> {
-                            datePickerDialog(date)
-                        }
                         else -> {
                             note.cardId = card.id
                             note.date = date.text.toString()
                             note.difference = -difference.text.toString().toFloat()
+                            card.expired = expired.text.toString()
                             saveNotes()
                         }
                     }
@@ -135,13 +204,11 @@ class DetailsFragment : MvpAppCompatFragment() {
                             Snackbar.make(view, getString(R.string.wrongData), Snackbar.LENGTH_LONG)
                                 .show()
                         }
-                        date.text == resources.getString(R.string.date) -> {
-                            datePickerDialog(date)
-                        }
                         else -> {
                             note.cardId = card.id
                             note.date = date.text.toString()
                             note.difference = difference.text.toString().toFloat()
+                            card.expired = expired.text.toString()
                             saveNotes()
                         }
                     }
@@ -243,6 +310,7 @@ class DetailsFragment : MvpAppCompatFragment() {
         details_card_name.text = card.name
         details_card_number.text = card.number
         details_fuelType.setSelection(card.fuelType)
+        details_expired.text = card.expired
         adapter.dataChanged(items)
         updateCard()
     }
@@ -250,6 +318,22 @@ class DetailsFragment : MvpAppCompatFragment() {
     private fun calculateCardBalance() {
         cardBalance = 0f
         items.forEach { cardBalance += it.difference }
+    }
+
+    private fun dateComparator(): String {
+        val cal = Calendar.getInstance()
+        val year: Int = cal.get(Calendar.YEAR)
+        val month: Int = cal.get(Calendar.MONTH)
+        val dayOfMonth: Int = cal.get(Calendar.DAY_OF_MONTH)
+        var myMonth = (month + 1).toString()
+        var myDay = dayOfMonth.toString()
+        if (month < 9) {
+            myMonth = "0$myMonth"
+        }
+        if (dayOfMonth < 10) {
+            myDay = "0$myDay"
+        }
+        return "$myDay/$myMonth/$year"
     }
 
     private fun dateListener(v: View): DatePickerDialog.OnDateSetListener =
@@ -268,12 +352,9 @@ class DetailsFragment : MvpAppCompatFragment() {
 
     private fun datePickerDialog(v: View) {
         val cal = Calendar.getInstance()
-        val year: Int
-        val month: Int
-        val dayOfMonth: Int
-        year = cal.get(Calendar.YEAR)
-        month = cal.get(Calendar.MONTH)
-        dayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
+        val year: Int = cal.get(Calendar.YEAR)
+        val month: Int = cal.get(Calendar.MONTH)
+        val dayOfMonth: Int = cal.get(Calendar.DAY_OF_MONTH)
         DatePickerDialog(
             context!!,
             dateListener(v),

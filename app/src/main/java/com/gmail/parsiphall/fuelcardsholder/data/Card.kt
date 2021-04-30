@@ -11,5 +11,6 @@ data class Card(
     @ColumnInfo var number: String = "",
     @ColumnInfo var name: String = "",
     @ColumnInfo var balance: Float = 0f,
-    @ColumnInfo var fuelType: Int = 0
+    @ColumnInfo var fuelType: Int = 0,
+    @ColumnInfo var expired: String = ""
 ) : Serializable

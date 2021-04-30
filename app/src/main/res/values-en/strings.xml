@@ -25,4 +25,7 @@
     <string name="exportDB">Export DB</string>
     <string name="importDB">Import DB</string>
     <string name="settings">Settings</string>
+    <string name="record">Save</string>
+    <string name="correction">Edit</string>
+    <string name="expired">Valid until:</string>
 </resources>
