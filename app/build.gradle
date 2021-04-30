@@ -11,8 +11,8 @@ android {
         applicationId "com.gmail.parsiphall.fuelcardsholder"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 202104303
-        versionName "0.1.21"
+        versionCode 202104304
+        versionName "0.1.22"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

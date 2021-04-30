@@ -240,7 +240,7 @@ class MainFragment : MvpAppCompatFragment() {
             "${c.get(Calendar.DAY_OF_MONTH)}-${c.get(Calendar.MONTH) + 1}-${c.get(Calendar.YEAR)}\n\n"
         itemsToShare.forEach {
             val balance = ("%.2f".format(it.balance))
-            textToSend += "${it.number}(${it.name} - ${it.fuelType}) - ${it.expired}   $balance\n"
+            textToSend += "${it.number}(${it.name} - ${resources.getStringArray(R.array.fuelType)[it.fuelType]}) - ${it.expired}   $balance\n"
         }
         itemsToShare.clear()
         val sendIntent = Intent()
